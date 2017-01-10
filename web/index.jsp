@@ -1,21 +1,31 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@page import="entity.*" %>
-<%@page import="dao.*" %>
-<%@page import="configuration.*" %>
+<%@ page import="dao.CarService" %>
+<%@ page import="dao.DriverService" %>
+<%@ page import="dao.ParkService" %>
+<%@ page import="dao.UserService" %>
+<%@ page import="entity.Car" %>
+<%@ page import="javax.naming.Context" %>
+<%@ page import="javax.naming.InitialContext" %>
 <%@ page import="java.util.List" %>
+<%@ page import="entity.Driver" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    CarDAO dao = new CarDAO(Configuration.getDataSource());
-    ParkDAO parkDAO = new ParkDAO(Configuration.getDataSource());
+    Context ctx = new InitialContext();
+    UserService userService = (UserService) ctx.lookup("java:comp/env/userService");
+    CarService carService = (CarService) ctx.lookup("java:comp/env/carService");
+    ParkService parkService = (ParkService) ctx.lookup("java:comp/env/parkService");
+    DriverService driverService = (DriverService) ctx.lookup("java:comp/env/driverService");
+    List<Driver> drivers = driverService.getAll();
     List<Car> carList = null;
     String tag = request.getParameter("filterTag");
-    if(tag!=null) {
-        carList = dao.filterByTag(tag);
-    }else{
-         carList = dao.getAll();
+    if (tag != null) {
+        carList = carService.filterByTag(tag);
+    } else {
+        carList = carService.getAll();
     }
     pageContext.setAttribute("cars", carList);
+
 %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +36,7 @@
     <link href="css/add.css" rel="stylesheet">
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <title>Hello, World</title>
+    <title>Autopark</title>
 </head>
 <body>
 
@@ -36,7 +46,7 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Cars</a>
         </div>
-        <div class="collapse navbar-collapse" >
+        <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Table </a></li>
                 <li><a href="add.jsp">Add Car</a></li>
@@ -47,7 +57,7 @@
             <form class="navbar-form navbar-right">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Search" name="filterTag">
-                    <input class="btn btn-default" type="submit" value="Filter" >
+                    <input class="btn btn-default" type="submit" value="Filter">
                 </div>
 
 
@@ -60,7 +70,7 @@
 <table class="table table-hover table-bordered">
     <thead>
     <tr>
-        <th>id</th>
+        <th>Id</th>
         <th>Registration tag</th>
         <th>Park</th>
     </tr>
@@ -70,8 +80,7 @@
         <tr>
             <td>${car.id}</td>
             <td>${car.registrationTag}</td>
-            <td><%Car car =  (Car)pageContext.getAttribute("car");%>
-                <%=parkDAO.readById(car.getParkId()).getName()%></td>
+            <td>${car.park.name}</td>
         </tr>
     </c:forEach>
     </tbody>

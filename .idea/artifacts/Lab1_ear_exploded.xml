@@ -6,6 +6,18 @@
       <element id="directory" name="web.war">
         <element id="artifact" artifact-name="Lab1:war exploded" />
       </element>
+      <element id="jpa-descriptors" facet="Lab1/jpa/JPA" />
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="mysql:mysql-connector-java:5.1.1" />
+        <element id="library" level="project" name="junit:junit:4.11" />
+        <element id="library" level="project" name="apache-log4j-2" />
+        <element id="library" level="project" name="org.apache.commons:commons-dbcp2:2.0" />
+        <element id="library" level="project" name="Java EE 6-Java EE 6" />
+        <element id="library" level="project" name="javaee" />
+      </element>
+      <element id="directory" name="Lab1.jar">
+        <element id="artifact" artifact-name="Lab1:EJB exploded" />
+      </element>
     </root>
   </artifact>
 </component>

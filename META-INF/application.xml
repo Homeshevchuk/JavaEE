@@ -10,4 +10,7 @@
             <context-root>/</context-root>
         </web>
     </module>
+    <module id="Lab1-EJB">
+        <ejb>Lab1.jar</ejb>
+    </module>
 </application>

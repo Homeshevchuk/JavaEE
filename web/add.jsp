@@ -1,23 +1,28 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@page import="configuration.Configuration" %>
-<%@page import="dao.ParkDAO" %>
 <%@page import="entity.Park" %>
 <%@ page import="java.util.List" %>
 <%@ page import="entity.Car" %>
-<%@ page import="dao.CarDAO" %>
+<%@ page import="dao.UserService" %>
+<%@ page import="dao.CarService" %>
+<%@ page import="dao.ParkService" %>
+<%@ page import="dao.DriverService" %>
+<%@ page import="javax.naming.Context" %>
+<%@ page import="javax.naming.InitialContext" %>
 <%
-    ParkDAO parkDAO = new ParkDAO(Configuration.getDataSource());
-
+    Context ctx = new InitialContext();
+    UserService userService = (UserService) ctx.lookup("java:comp/env/userService");
+    CarService carService = (CarService) ctx.lookup("java:comp/env/carService");
+    ParkService parkService = (ParkService) ctx.lookup("java:comp/env/parkService");
+    DriverService driverService = (DriverService) ctx.lookup("java:comp/env/driverService");
     String tag = request.getParameter("RegistrationTag");
     String parkId = request.getParameter("Park");
     if(tag!=null&&parkId!=null){
-        CarDAO carDAO = new CarDAO(Configuration.getDataSource());
-        Car car = new Car(tag,Long.parseLong(parkId));
-        carDAO.create(car);
+        Car car = new Car(tag,parkService.read(Long.parseLong(parkId)));
+        carService.create(car);
         response.sendRedirect("index.jsp");
     }
 
-    List<Park> parks = parkDAO.getAll();
+    List<Park> parks = parkService.getAll();
     pageContext.setAttribute("parks", parks);
 
 %>

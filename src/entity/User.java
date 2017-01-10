@@ -1,20 +1,20 @@
 package entity;
 
-import annotations.Column;
-import annotations.Id;
-import annotations.Table;
+
+import javax.persistence.*;
 
 /**
  * Created by PC on 16.11.2016.
  */
-@Table("user")
+@Entity
+@Table(name = "user")
 public class User {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
-    @Column("name")
+    @Column(name = "name")
     public String name;
-    @Column("password")
+    @Column(name = "password")
     public String password;
 
     public User() {
@@ -74,5 +74,14 @@ public class User {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

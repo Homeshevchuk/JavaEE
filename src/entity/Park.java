@@ -1,32 +1,25 @@
 package entity;
 
-import annotations.Column;
-import annotations.Id;
-import annotations.Table;
 
-/**
- * Created by PC on 01.12.2016.
- */
-@Table("park")
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Park {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
-    @Column("name")
+    @Column(name = "name")
     public String name;
-    @Column("owner")
-    public long owner;
-
+    @OneToOne
+    @JoinColumn(name = "owner")
+    public User owner;
+    @OneToMany(mappedBy = "park")
+    List<Car> carList;
     public Park() {
     }
 
-    public Park(String name, long owner) {
-        this.name = name;
-        this.owner = owner;
-    }
-
-    public Park(long id, String name, long owner) {
-        this.id = id;
+    public Park(String name, User owner) {
         this.name = name;
         this.owner = owner;
     }
@@ -47,32 +40,21 @@ public class Park {
         this.name = name;
     }
 
-    public long getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(long owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Park park = (Park) o;
-
-        if (id != park.id) return false;
-        if (owner != park.owner) return false;
-        return name != null ? name.equals(park.name) : park.name == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (owner ^ (owner >>> 32));
-        return result;
+    public String toString() {
+        return "Park{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", owner=" + owner +
+                ", carList=" + carList +
+                '}';
     }
 }

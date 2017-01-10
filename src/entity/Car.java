@@ -1,34 +1,27 @@
 package entity;
 
-import annotations.Column;
-import annotations.Id;
-import annotations.Table;
 
-/**
- * Created by PC on 01.12.2016.
- */
-@Table("car")
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Car {
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
-    @Column("registration_tag")
+    @Column(name = "registration_tag")
     public String registrationTag;
-    @Column("park")
-    public long parkId;
-
+    @ManyToOne
+    @JoinColumn(name = "park")
+    public Park park;
+    @ManyToMany(mappedBy = "cars")
+    List<Driver> drivers;
     public Car() {
     }
 
-    public Car(long id, String registrationTag, long parkId) {
-        this.id = id;
+    public Car(String registrationTag, Park park) {
         this.registrationTag = registrationTag;
-        this.parkId = parkId;
-    }
-
-    public Car(String registrationTag, long parkId) {
-        this.registrationTag = registrationTag;
-        this.parkId = parkId;
+        this.park = park;
     }
 
     public long getId() {
@@ -47,33 +40,20 @@ public class Car {
         this.registrationTag = registrationTag;
     }
 
-    public long getParkId() {
-        return parkId;
+    public Park getPark() {
+        return park;
     }
 
-    public void setParkId(long parkId) {
-        this.parkId = parkId;
+    public void setPark(Park park) {
+        this.park = park;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Car car = (Car) o;
-
-        if (id != car.id) return false;
-        if (parkId != car.parkId) return false;
-        return registrationTag != null ? registrationTag.equals(car.registrationTag) : car.registrationTag == null;
-
+    public List<Driver> getDrivers() {
+        return drivers;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (registrationTag != null ? registrationTag.hashCode() : 0);
-        result = 31 * result + (int) (parkId ^ (parkId >>> 32));
-        return result;
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
@@ -81,7 +61,8 @@ public class Car {
         return "Car{" +
                 "id=" + id +
                 ", registrationTag='" + registrationTag + '\'' +
-                ", parkId=" + parkId +
+                ", park=" + park +
+                ", drivers=" + drivers +
                 '}';
     }
 }

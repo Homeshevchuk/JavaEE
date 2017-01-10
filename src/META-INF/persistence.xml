@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence">
+    <persistence-unit name ="unit">
+        <jta-data-source>jdbc/Source</jta-data-source>
+        <class>entity.User</class>
+    </persistence-unit>
+</persistence>
